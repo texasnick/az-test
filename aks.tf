@@ -7,6 +7,11 @@ resource "random_id" "log_analytics_workspace_name_suffix" {
     byte_length = 8
 }
 
+resource "tls_private_key" "lnxkey" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
 resource "azurerm_log_analytics_workspace" "test" {
     # The WorkSpace name has to be unique across the whole of azure, not just the current subscription/tenant.
     name                = join(", ", [var.log_analytics_workspace_name, "-", random_id.log_analytics_workspace_name_suffix.dec])
@@ -38,7 +43,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
         admin_username = "ubuntu"
 
         ssh_key {
-            key_data = file(var.ssh_public_key)
+            key_data = tls_private_key.lnxkey.public_key_openssh
         }
     }
 
