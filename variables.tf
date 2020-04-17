@@ -42,3 +42,7 @@ variable "log_analytics_workspace_location" {
 variable "log_analytics_workspace_sku" {
     default = "PerGB2018"
 }
+
+variable "environment" {
+    default = "Development"
+}
